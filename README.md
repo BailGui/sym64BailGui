@@ -50,3 +50,59 @@ Donnez le nom `homepage` à cet index et il doit pointer vers la racine de votre
  Does this app need to hash/check user passwords? (yes/no) [yes]:
 
 ```
+
+Il faut ensuite faire un make:entity pour compléter l'entité `User` pour obtenir les champs suivants dans la table `user` :
+
+```mysql
+-- -----------------------------------------------------
+-- Table `sym64michael`.`user`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `sym64michael`.`user` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `username` VARCHAR(180) NOT NULL,
+  `roles` JSON NOT NULL,
+  `password` VARCHAR(255) NOT NULL,
+  `fullname` VARCHAR(150) NULL,
+  `uniqid` VARCHAR(60) NOT NULL,
+  `email` VARCHAR(180) NOT NULL,
+  `activate` TINYINT UNSIGNED NOT NULL DEFAULT 0-- boolean false
+    ,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `UNIQ_IDENTIFIER_USERNAME` (`username` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_unicode_ci;
+```
+
+### Créez une Entité `Article` avec la commande suivante :
+
+```bash
+php bin/console make:entity Article
+
+```
+
+Pour obtenir en base de données la table suivante :
+
+```mysql
+-- -----------------------------------------------------
+-- Table `sym64michael`.`article`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `sym64michael`.`article` (
+    `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `user_id` INT UNSIGNED NOT NULL,
+    `title` VARCHAR(160) NOT NULL,
+    `title_slug` VARCHAR(162) NOT NULL,
+    `text` LONGTEXT NOT NULL,
+    `article_date_create` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `article_date_posted` DATETIME NULL DEFAULT NULL,
+    `published` TINYINT(1) NOT NULL DEFAULT '0',
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `UNIQ_23A0E66D347411D` (`title_slug` ASC) VISIBLE,
+    INDEX `IDX_23A0E66A76ED395` (`user_id` ASC) VISIBLE,
+    CONSTRAINT `FK_23A0E66A76ED395`
+      FOREIGN KEY (`user_id`)
+        REFERENCES `sym64michael`.`user` (`id`))
+  ENGINE = InnoDB
+  DEFAULT CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;
+```
