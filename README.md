@@ -120,3 +120,57 @@ php bin/console make:migration
 # puis
 php bin/console doctrine:migrations:migrate
 ```
+
+### Mysql m2m
+
+```mysql
+-- -----------------------------------------------------
+-- Table `sym64michael`.`article_section`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `sym64michael`.`article_section` (
+  `article_id` INT UNSIGNED NOT NULL,
+  `section_id` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`article_id`, `section_id`),
+  INDEX `IDX_C0A13E587294869C` (`article_id` ASC) VISIBLE,
+  INDEX `IDX_C0A13E58D823E37A` (`section_id` ASC) VISIBLE,
+  CONSTRAINT `FK_C0A13E587294869C`
+    FOREIGN KEY (`article_id`)
+    REFERENCES `sym64michael`.`article` (`id`)
+    ON DELETE CASCADE,
+  CONSTRAINT `FK_C0A13E58D823E37A`
+    FOREIGN KEY (`section_id`)
+    REFERENCES `sym64michael`.`section` (`id`)
+    ON DELETE CASCADE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_unicode_ci;
+```
+
+### Base de donnée minimale :
+
+![base de donnée minimale](datas/sym64michael.png)
+
+### Créez une Fixture pour toutes les entités :
+
+
+#### Installez le package `orm-fixtures` :
+
+```bash
+composer require orm-fixtures --dev 
+```
+
+#### Importez Faker :
+
+```bash
+composer require fakerphp/faker
+ ```
+
+Documentation : https://fakerphp.org/
+
+#### Importez Slugify :
+
+```bash
+composer require cocur/slugify
+```
+
+Documentation : https://github.com/cocur/slugify
