@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use App\Entity\User;
@@ -29,6 +30,7 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
+
         // Création de Faker
         $faker = Faker::create('fr_FR');
         // Création du slugify
@@ -107,6 +109,55 @@ class AppFixtures extends Fixture
             $manager->persist($user);
 
         }
+
+           ###
+    # GESTION de POST
+    ###
+    for($i = 1; $i <= 160; $i++){
+        $post = new Article();
+        // on prend un auteur au hasard
+        $randomUserId = array_rand($users);
+
+        $post->setUser($users[$randomUserId]);
+        // titre entre 20 et 150 caractères
+        $title = $faker->realTextBetween(20,150);
+        $post->setTitle($title);
+        $post->setTitleSlug($slugify->slugify($post->getTitle()));
+        // texte entre 3 et 6 paragraphes
+        $post->setText($faker->paragraphs(mt_rand(3,6), true));
+        // on va remonter dans le passé entre 180 et 210 jours
+        $day = mt_rand(180,210);
+        $post->setArticleDateCreate(new DateTime("now -$day day"));
+        // on va publier 3 articles sur 4 (+-) 1,2,3 => true 4 => false
+        $published = mt_rand(1,4) < 4;
+        $post->setPublished($published);
+        if($published){
+            // on va remonter dans le passé entre 5 et 15 jours
+            $day = mt_rand(5,15);
+            $post->setArticleDatePosted(new DateTime("now -$day day"));
+        }
+        // on garde les postes
+        $posts[] = $post;
+
+        $manager->persist($post);
+
+    }
+    ###
+    # GESTION de Section
+    ###
+
+    // Section
+    for ($i=1; $i<=6; $i++){
+        $section = new Section();
+        $section->setSectionTitle($faker->sentence(3, true));
+        $section->setSectionSlug($slugify->slugify($section->getSectionTitle()));
+        $section->setSectionDetail($faker->text(255));
+        $postRandom = array_rand($posts, mt_rand(2,40));
+        foreach ($postRandom as $post){
+            $section->addArticle($posts[$post]);
+        }
+        $manager->persist($section);
+    }
 
 
         # envoie à la base de donnée (commit)
