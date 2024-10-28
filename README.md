@@ -106,3 +106,17 @@ CREATE TABLE IF NOT EXISTS `sym64michael`.`article` (
   DEFAULT CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_unicode_ci;
 ```
+
+### Créez d'un `manytomany` de `Article` vers `Section` :
+
+```bash
+php bin/console make:entity Article
+```
+
+Puis migration la table :
+
+```bash
+php bin/console make:migration
+# puis
+php bin/console doctrine:migrations:migrate
+```
