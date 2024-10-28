@@ -363,3 +363,7 @@ class AppFixtures extends Fixture
     
 }
 ```
+
+### Choisissez un template et utiliser le sur votre projet
+
+Vous pouvez utiliser un template gratuit de votre choix, responsive, et utiliser `Twig` pour l'intégrer dans votre projet. N'utilisez pas le même template que l'exemple donné !
