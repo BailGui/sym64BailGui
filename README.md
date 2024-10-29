@@ -417,3 +417,44 @@ séparation en block de la template bootstrap :
 ## Modification de `base.html.twig`
 
 ajout du head, des links et du script dans le fichier `base.html.twig`.
+
+## Création d'une page de connexion
+
+    php bin/console make:security:form-login
+
+```bash
+php bin/console make:security:form-login
+
+ Choose a name for the controller class (e.g. SecurityController) [SecurityController]:
+ >
+
+ Do you want to generate a '/logout' URL? (yes/no) [yes]:
+ >
+
+ Do you want to generate PHPUnit tests? [Experimental] (yes/no) [no]:
+ >
+
+ created: src/Controller/SecurityController.php
+ created: templates/security/login.html.twig
+ updated: config/packages/security.yaml
+
+
+  Success!
+```
+
+### Ajoutez login/logout au menu
+
+```twig
+{# templates/main/menu.html.twig #}
+<nav>
+    {# si nous sommes connectés #}
+                {% if is_granted('IS_AUTHENTICATED') %}
+               <li class="nav-item"><a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a></li>
+                    {% if is_granted('ROLE_ADMIN') %}
+                <li class="nav-item"><a class="nav-link" href="{{ path('app_admin') }}">Administration</a></li>
+                    {% endif %}
+                {% else %}
+                <li class="nav-item"><a class="nav-link" href="{{ path('app_login') }}">Connexion</a></li>
+                {% endif %}
+</nav>
+```
