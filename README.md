@@ -536,3 +536,33 @@ ller]:
  Next: Check your new CRUD by going to /admin/post/
 
 ```
+
+on va modifier l'insertion de `src/Controller/AdminPostController.php` pour avoir une date par défaut et éviter une erreur lors de l'insertion d'un nouveau Post
+
+```php
+#[Route('/new', name: 'app_admin_post_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $post = new Post();
+        // on veut une date de création sans formulaire
+        $post->setPostDateCreated(new \DateTime());
+        $form = $this->createForm(PostType::class, $post);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($post);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_admin_post_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('admin_post/new.html.twig', [
+            'post' => $post,
+            'form' => $form,
+            'title' => 'New Post',
+            'homepage_text' => "Administration des Posts par {$this->getUser()->getUsername()}",
+        ]);
+
+    }
+
+```

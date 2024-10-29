@@ -26,6 +26,7 @@ final class AdminArticleController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $article = new Article();
+        $article->setArticleDateCreated(new \DateTime());
         $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
 
@@ -39,6 +40,8 @@ final class AdminArticleController extends AbstractController
         return $this->render('admin_article/new.html.twig', [
             'article' => $article,
             'form' => $form,
+            'title' => 'New Article',
+            'homepage_text' => "Administration des Articles par {$this->getUser()->getUsername()}",
         ]);
     }
 
