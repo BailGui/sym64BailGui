@@ -367,3 +367,53 @@ class AppFixtures extends Fixture
 ### Choisissez un template et utiliser le sur votre projet
 
 Vous pouvez utiliser un template gratuit de votre choix, responsive, et utiliser `Twig` pour l'intégrer dans votre projet. N'utilisez pas le même template que l'exemple donné !
+
+### Mise en forme des formulaires et des pages avec `bootstrap`
+
+Nous allons utiliser les assets qui se trouvent dans le dossier `assets`
+
+Documentation :
+
+Différence AssetMapper et Webpack Encore : https://symfony.com/doc/6.4/frontend.html#using-php-twig
+
+### `AssetMapper`
+
+Documentation : https://symfony.com/doc/6.4/frontend/asset_mapper.html
+
+On va importer bootstrap
+
+    php bin/console importmap:require bootstrap
+
+    [OK] 3 new items (bootstrap, @popperjs/core, bootstrap/dist/css/bootstrap.min.css) added to the importmap.php!
+
+La mise à jour a été effectuée uniquement dans `importmap.php`
+
+Pour tester, on va d'abord trouver les templates `bootstrap` à cette adresse : https://symfony.com/doc/current/form/form_themes.html
+
+Donc pour les formulaires `bootstrap`
+
+```yaml
+# config/packages/twig.yaml
+twig:
+form_themes: ['bootstrap_5_horizontal_layout.html.twig']
+# ...
+```
+
+Le code `bootstrap` est généré, mais il manque le style !
+
+Téléchargement d'une Template bootstrap à ajouter au dossier datas
+
+On s'en servira pour créer les différents twig
+
+## Ajout de `template.front.html.twig` 
+
+séparation en block de la template bootstrap :
+
+`_menu.html.twig`
+`footer.html.twig`
+`header.html.twig`
+`main.html.twig`
+
+## Modification de `base.html.twig`
+
+ajout du head, des links et du script dans le fichier `base.html.twig`.
