@@ -497,29 +497,37 @@ On duplique `templates/template.front.html.twig` en `templates/template.back.htm
 
 On modifie `templates/admin/index.html.twig` pour le faire correspondre aux variables du contrôleur
 
-## Création du CRUD de Post
+## Création du CRUD de Article
 
 ```bash
 php bin/console make:crud
 
- The class name of the entity to create CRUD (e.g. FierceChef):
- > Post
-Post
+ The class name of the entity to create CRUD (e.g. OrangeGnome):
+ > Article
+Article
 
- Choose a name for your controller class (e.g. PostController) [PostController]:
- > AdminPostController
+ Choose a name for your controller class (e.g. ArticleController) [ArticleContro
+ller]:
+ > AdminArticleController
 
  Do you want to generate PHPUnit tests? [Experimental] (yes/no) [no]:
  >
 
- created: src/Controller/AdminPostController.php
- created: src/Form/PostType.php
- created: templates/admin_post/_delete_form.html.twig
- created: templates/admin_post/_form.html.twig
- created: templates/admin_post/edit.html.twig
- created: templates/admin_post/index.html.twig
- created: templates/admin_post/new.html.twig
- created: templates/admin_post/show.html.twig
+ created: src/Controller/AdminArticleController.php
+ created: src/Form/ArticleType.php
+ created: templates/admin_article/_delete_form.html.twig
+ created: templates/admin_article/_form.html.twig
+ created: templates/admin_article/edit.html.twig
+ created: templates/admin_article/index.html.twig
+ created: templates/admin_article/new.html.twig
+ created: templates/admin_article/show.html.twig
+
+
+  Success!
+
+
+ Next: Check your new CRUD by going to /admin/article/
+
 
 
   Success!
