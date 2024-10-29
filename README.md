@@ -458,3 +458,73 @@ php bin/console make:security:form-login
                 {% endif %}
 </nav>
 ```
+
+### Créer un contrôleur d'administration
+
+  php bin/console make:controller AdminController
+  
+Une route vers un dossier `admin` a été créée, on va vérifier si un rôle lui est attribué dans le fichier `config/packages/security.yaml`
+
+```yaml
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    access_control:
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        # - { path: ^/profile, roles: ROLE_USER }
+```
+
+Dorénavant, ce dossier (et sous-dossiers sont accessibles que par les `ROLE_ADMIN`)
+
+https://symfony.com/doc/current/security.html#roles
+
+On modifie le fichier pour passer certaines variables :
+
+`src/Controller/AdminController.php`
+```php
+# ...
+#[Route('/admin', name: 'app_admin')]
+    public function index(): Response
+    {
+        return $this->render('admin/index.html.twig', [
+            'title' => 'Administration',
+            'homepage_text' => "Bienvenue {$this->getUser()->getUsername()}",
+        ]);
+    }
+# ...
+```
+
+On duplique `templates/template.front.html.twig` en `templates/template.back.html.twig`. On modifiera ce template suivant les besoins.
+
+On modifie `templates/admin/index.html.twig` pour le faire correspondre aux variables du contrôleur
+
+## Création du CRUD de Post
+
+```bash
+php bin/console make:crud
+
+ The class name of the entity to create CRUD (e.g. FierceChef):
+ > Post
+Post
+
+ Choose a name for your controller class (e.g. PostController) [PostController]:
+ > AdminPostController
+
+ Do you want to generate PHPUnit tests? [Experimental] (yes/no) [no]:
+ >
+
+ created: src/Controller/AdminPostController.php
+ created: src/Form/PostType.php
+ created: templates/admin_post/_delete_form.html.twig
+ created: templates/admin_post/_form.html.twig
+ created: templates/admin_post/edit.html.twig
+ created: templates/admin_post/index.html.twig
+ created: templates/admin_post/new.html.twig
+ created: templates/admin_post/show.html.twig
+
+
+  Success!
+
+
+ Next: Check your new CRUD by going to /admin/post/
+
+```
