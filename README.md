@@ -420,8 +420,6 @@ ajout du head, des links et du script dans le fichier `base.html.twig`.
 
 ## Création d'une page de connexion
 
-    php bin/console make:security:form-login
-
 ```bash
 php bin/console make:security:form-login
 
@@ -537,32 +535,30 @@ ller]:
 
 ```
 
-on va modifier l'insertion de `src/Controller/AdminPostController.php` pour avoir une date par défaut et éviter une erreur lors de l'insertion d'un nouveau Post
+on va modifier l'insertion de `src/Controller/AdminArticleController.php` pour avoir une date par défaut et éviter une erreur lors de l'insertion d'un nouveau Post
 
 ```php
-#[Route('/new', name: 'app_admin_post_new', methods: ['GET', 'POST'])]
+#[Route('/new', name: 'app_admin_article_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $post = new Post();
-        // on veut une date de création sans formulaire
-        $post->setPostDateCreated(new \DateTime());
-        $form = $this->createForm(PostType::class, $post);
+        $article = new Article();
+        $article->setArticleDateCreated(new \DateTime());
+        $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($post);
+            $entityManager->persist($article);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_admin_post_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_admin_article_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('admin_post/new.html.twig', [
-            'post' => $post,
+        return $this->render('admin_article/new.html.twig', [
+            'article' => $article,
             'form' => $form,
-            'title' => 'New Post',
-            'homepage_text' => "Administration des Posts par {$this->getUser()->getUsername()}",
+            'title' => 'New Article',
+            'homepage_text' => "Administration des Articles par {$this->getUser()->getUsername()}",
         ]);
-
     }
 
 ```
