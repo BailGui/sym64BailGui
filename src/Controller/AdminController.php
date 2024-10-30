@@ -15,7 +15,6 @@ class AdminController extends AbstractController
         return $this->render('admin/index.html.twig', [
             'title' => 'Administration',
             'homepage_text' => "Bienvenue {$this->getUser()->getUsername()}",
-            'sections' => $sections->findAll(),
         ]);
     }
     

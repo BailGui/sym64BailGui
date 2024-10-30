@@ -7,6 +7,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Repository\SectionRepository;
 use Doctrine\ORM\EntityManagerInterface;
+# Appel de l'Entity Article
+use App\Entity\Article;
 
 class MainController extends AbstractController
 {
@@ -14,6 +16,8 @@ class MainController extends AbstractController
     # appel du gestionnaire de Section
     public function index(SectionRepository $sections, EntityManagerInterface $em): Response
     {
+        $articles = $em->getRepository(Article::class)->findBy(['published'=>true], ['article_date_posted'=>'DESC']);
+        
         return $this->render(
             'main/index.html.twig', [
                 'title' => 'Homepage',
@@ -21,6 +25,8 @@ class MainController extends AbstractController
                 ),
                 # on met dans une variable pour twig toutes les sections récupérées
                 'sections' => $sections->findAll(),
+                # Liste des postes
+                'articles' => $articles,
 
             ]
         );
@@ -43,7 +49,7 @@ class MainController extends AbstractController
         $section = $sections->find($id);
         return $this->render('main/section.html.twig', [
             'title' => 'Section '.$section->getSectionTitle(),
-            'homepage_text'=> $section->getSectionDescription(),
+            'homepage_text'=> $section->getSectionDetail(),
             'section' => $section,
             'sections' => $sections->findAll(),
         ]);

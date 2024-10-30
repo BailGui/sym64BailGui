@@ -1,0 +1,26 @@
+{# templates/main/section.html.twig #}
+{% extends 'template.front.html.twig' %}
+
+{# on surcharge le block parent #}
+{% block title %}{{ parent() }} | {{ title }}{% endblock %}
+
+{% block body %}
+<h1>{{ title }}</h1>
+    <p>{{ homepage_text }}</p>
+     {% for article in section.articles %}
+        <h3>{{ article.Title }}</h3>
+         <p>Ecrit par {{ article.user.username }} le
+             {{ article.articleDateCreate|date("d/m/Y \à H:i") }}</p>
+         <p>{{ article.Text }}</p>
+    <p>
+         {% for section in article.sections %}
+             <a href="{{ path('section',{id:section.id}) }}">{{ section.SectionTitle }}</a>
+         {% else %}
+             <h3>Pas encore de section</h3>
+         {% endfor %}
+             </p>
+    {% else %}
+    <h3>Pas encore d'articles</h3>
+    {% endfor %}
+
+{% endblock %}

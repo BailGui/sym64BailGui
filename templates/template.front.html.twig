@@ -25,6 +25,7 @@
         <div class="row gy-5">
 
           <div class="col-lg-4 col-md-6">
+          {% for article in articles %}
             <article>
 
               <div class="post-img">
@@ -33,7 +34,9 @@
 
               <div class="meta-top">
                 <ul>
-                  <li class="d-flex align-items-center"><a href="blog-details.html">Sorts</a></li>
+                {% for section in article.sections %}
+                  <li class="d-flex align-items-center"><a href="blog-details.html">{{ section.SectionTitle }}</a></li>
+                {% endfor %}
                   <li class="d-flex align-items-center"><i class="bi bi-dot"></i> <a href="blog-details.html"><time datetime="2022-01-01">Jan 1, 2022</time></a></li>
                 </ul>
               </div>
@@ -43,6 +46,7 @@
               </h2>
 
             </article>
+          {% endfor %}
           </div><!-- End post list item -->
 
           <div class="col-lg-4 col-md-6">
