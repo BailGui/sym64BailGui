@@ -35,7 +35,7 @@
               <div class="meta-top">
                 <ul class="justify-content-center">
                 {% for section in article.sections %}
-                  <li class="d-flex align-items-center"><a href="{{ path("section", {'slug': section.sectionSlug }) }}">{{ section.SectionTitle }}</a></li>
+                  <li class="d-flex align-items-center"><a href="{{ path('section',{id:section.id}) }}">{{ section.SectionTitle }}</a></li>
                 {% endfor %}
                   <li class="d-flex align-items-center"><i class="bi bi-dot"></i>{{ article.ArticleDatePosted|date("d/m/Y \à H:i") }}</li>
                   <li class="d-flex align-items-center"><i class="bi bi-dot"></i>{{ article.User.username }}</li>
