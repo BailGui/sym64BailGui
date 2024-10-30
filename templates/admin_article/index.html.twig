@@ -1,19 +1,22 @@
-{% extends 'base.html.twig' %}
+{% extends 'template.back.html.twig' %}
 
 {% block title %}Article index{% endblock %}
 
 {% block body %}
+<div class="container section-title">
+  <div class="row justify-content-center">
+     <div class="col-12 align-items-center justify-content-center mt-5">
+
     <h1>Article index</h1>
 
-    <table class="table">
+    <table class="table table-striped table-bordered">
         <thead>
             <tr>
                 <th>Id</th>
-                <th>User_id</th>
-                <th>Title_slug</th>
+                <th>TitleSlug</th>
                 <th>Text</th>
-                <th>Article_date_create</th>
-                <th>Article_date_posted</th>
+                <th>dateCreate</th>
+                <th>datePosted</th>
                 <th>Published</th>
                 <th>Title</th>
                 <th>actions</th>
@@ -23,7 +26,6 @@
         {% for article in articles %}
             <tr>
                 <td>{{ article.id }}</td>
-                <td>{{ article.userId }}</td>
                 <td>{{ article.titleSlug }}</td>
                 <td>{{ article.text }}</td>
                 <td>{{ article.articleDateCreate ? article.articleDateCreate|date('Y-m-d H:i:s') : '' }}</td>
@@ -44,4 +46,8 @@
     </table>
 
     <a href="{{ path('app_admin_article_new') }}">Create new</a>
+
+        </div>
+    </div>
+</div>
 {% endblock %}

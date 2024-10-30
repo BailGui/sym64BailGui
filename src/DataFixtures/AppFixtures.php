@@ -117,7 +117,6 @@ class AppFixtures extends Fixture
         $post = new Article();
         // on prend un auteur au hasard
         $randomUserId = array_rand($users);
-
         $post->setUser($users[$randomUserId]);
         // titre entre 20 et 150 caractères
         $title = $faker->realTextBetween(20,150);

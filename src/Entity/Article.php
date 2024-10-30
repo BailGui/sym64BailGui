@@ -16,9 +16,6 @@ class Article
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $user_id = null;
-
     #[ORM\Column(length: 160)]
     private ?string $title_slug = null;
 
@@ -113,7 +110,7 @@ class Article
         return $this;
     }
 
-    public function getPublished(): ?int
+    public function getPublished(): ?bool
     {
         return $this->published;
     }
