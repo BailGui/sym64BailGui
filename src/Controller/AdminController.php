@@ -18,26 +18,5 @@ class AdminController extends AbstractController
             'sections' => $sections->findAll(),
         ]);
     }
-     // création de l'url pour le détail d'une section
-     #[Route(
-        # chemin vers la section avec son id
-        path: '/section/{id}',
-        # nom du chemin
-        name: 'section',
-        # accepte l'id au format int positif uniquement
-        requirements: ['id' => '\d+'],
-        # si absent, donne 1 comme valeur par défaut
-        defaults: ['id'=>1])]
-
-    public function section(SectionRepository $sections, int $id): Response
-    {
-        // récupération de la section
-        $section = $sections->find($id);
-        return $this->render('main/section.html.twig', [
-            'title' => 'Section '.$section->getSectionTitle(),
-            'homepage_text'=> $section->getSectionDescription(),
-            'section' => $section,
-            'sections' => $sections->findAll(),
-        ]);
-    }
+    
 }
