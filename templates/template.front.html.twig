@@ -18,81 +18,36 @@
     </div><!-- End Page Title -->
 
     <!-- Blog Posts 2 Section -->
+    {% for article in articles %}
     <section id="blog-posts-2" class="blog-posts-2 section">
 
       <div class="container">
 
         <div class="row gy-5">
 
-          <div class="col-lg-4 col-md-6">
-          {% for article in articles %}
-            <article>
-
+          <div class="col-lg-12 col-md-12 text-center">
+             
+            <article class="align-items-center">
               <div class="post-img">
                 <img src="{{ asset('img/blog/blog-1.jpg') }}" alt="" class="img-fluid">
               </div>
 
               <div class="meta-top">
-                <ul>
+                <ul class="justify-content-center">
                 {% for section in article.sections %}
-                  <li class="d-flex align-items-center"><a href="blog-details.html">{{ section.SectionTitle }}</a></li>
+                  <li class="d-flex align-items-center"><a href="{{ path("section", {'slug': section.sectionSlug }) }}">{{ section.SectionTitle }}</a></li>
                 {% endfor %}
-                  <li class="d-flex align-items-center"><i class="bi bi-dot"></i> <a href="blog-details.html"><time datetime="2022-01-01">Jan 1, 2022</time></a></li>
+                  <li class="d-flex align-items-center"><i class="bi bi-dot"></i>{{ article.ArticleDatePosted|date("d/m/Y \à H:i") }}<a href="blog-details.html"></a></li>
                 </ul>
               </div>
 
               <h2 class="title">
-                <a href="blog-details.html">Dolorum optio tempore voluptas dignissimos</a>
+                <a href="{{ path("article", {'slug': article.TitleSlug }) }}">{{ article.title }}</a>
               </h2>
 
             </article>
-          {% endfor %}
-          </div><!-- End post list item -->
-
-          <div class="col-lg-4 col-md-6">
-
-            <article>
-
-              <div class="post-img">
-                <img src="{{ asset('img/blog/blog-2.jpg') }}" alt="" class="img-fluid">
-              </div>
-
-              <div class="meta-top">
-                <ul>
-                  <li class="d-flex align-items-center"><a href="blog-details.html">Fashion</a></li>
-                  <li class="d-flex align-items-center"><i class="bi bi-dot"></i> <a href="blog-details.html"><time datetime="2022-01-01">Jan 1, 2022</time></a></li>
-                </ul>
-              </div>
-
-              <h2 class="title">
-                <a href="blog-details.html">Nisi magni odit consequatur autem nulla dolorem</a>
-              </h2>
-
-            </article>
-
-          </div><!-- End post list item -->
-
-          <div class="col-lg-4 col-md-6">
-
-            <article>
-
-              <div class="post-img">
-                <img src="{{ asset('img/blog/blog-3.jpg') }}" alt="" class="img-fluid">
-              </div>
-
-              <div class="meta-top">
-                <ul>
-                  <li class="d-flex align-items-center"><a href="blog-details.html">Laws</a></li>
-                  <li class="d-flex align-items-center"><i class="bi bi-dot"></i> <a href="blog-details.html"><time datetime="2022-01-01">Jul 5, 2022</time></a></li>
-                </ul>
-              </div>
-
-              <h2 class="title">
-                <a href="blog-details.html">Possimus soluta ut id suscipit soluta</a>
-              </h2>
-
-            </article>
-
+            
+          
           </div><!-- End post list item -->
 
         </div><!-- End blog posts list -->
@@ -100,6 +55,7 @@
       </div>
 
     </section><!-- /Blog Posts 2 Section -->
+    {% endfor %}
 
     <!-- Blog Pagination Section -->
     <section id="blog-pagination" class="blog-pagination section">

@@ -562,3 +562,175 @@ on va modifier l'insertion de `src/Controller/AdminArticleController.php` pour a
     }
 
 ```
+
+## Afficher les 10 derniers sur l'index. 
+
+ajouter les routes pour les sections et les articles
+
+```php
+<?php
+
+namespace App\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Attribute\Route;
+use App\Repository\SectionRepository;
+use Doctrine\ORM\EntityManagerInterface;
+# Appel de l'Entity Article
+use App\Entity\Article;
+use App\Entity\Section;
+
+
+class MainController extends AbstractController
+{
+    #[Route('/', name: 'homepage')]
+    # appel du gestionnaire de Section
+    public function index(SectionRepository $sections, EntityManagerInterface $em): Response
+    {
+        $articles = $em->getRepository(Article::class)->findBy(['published'=>true], ['article_date_posted'=>'DESC'],10);
+
+        return $this->render(
+            'main/index.html.twig', [
+                'title' => 'Homepage',
+                'homepage_text'=> "Nous somme le ".date('d/m/Y \à H:i'
+                ),
+                # on met dans une variable pour twig toutes les sections récupérées
+                'sections' => $sections->findAll(),
+                # Liste des postes
+                'articles' => $articles,
+
+            ]
+        );
+    }
+
+     // création de l'url pour le détail d'une section
+     #[Route(
+        # chemin vers la section avec son id
+        path: '/section/{id}',
+        # nom du chemin
+        name: 'section',
+        # accepte l'id au format int positif uniquement
+        requirements: ['id' => '\d+'],
+        # si absent, donne 1 comme valeur par défaut
+        defaults: ['id'=>1])]
+
+    public function section(SectionRepository $sections, int $id): Response
+    {
+        // récupération de la section
+        $section = $sections->find($id);
+        return $this->render('main/section.html.twig', [
+            'title' => 'Section '.$section->getSectionTitle(),
+            'homepage_text'=> $section->getSectionDetail(),
+            'section' => $section,
+            'sections' => $sections->findAll(),
+        ]);
+    }
+
+    #[Route('/article/{slug}', name: 'article', methods: ['GET', 'POST'])]
+    public function article($slug, EntityManagerInterface $em, Request $request): Response
+    {
+
+        $sections = $em->getRepository(Section::class)->findAll();
+        $articles = $em->getRepository(Article::class)->findAll();
+        $article = $em->getRepository(Article::class)->findOneBy(['title_slug' => $slug]);
+
+        return $this->render('main/article.html.twig', [
+            'sections' => $sections,
+            'article' => $article,
+            'articles' => $articles,
+        ]);
+    }
+}
+```
+
+Appel et modification de template.front.html.twig
+
+```php 
+{% extends 'base.html.twig' %}
+
+{% block nav %}  {% include 'main/_menu.html.twig'%} {% endblock %}
+{% block body %}
+<main class="main">
+
+    <!-- Page Title -->
+    <div class="page-title light-background">
+      <div class="container">
+        <h1>Blog</h1>
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="index.html">Home</a></li>
+            <li class="current">Blog</li>
+          </ol>
+        </nav>
+      </div>
+    </div><!-- End Page Title -->
+
+    <!-- Blog Posts 2 Section -->
+    {% for article in articles %}
+    <section id="blog-posts-2" class="blog-posts-2 section">
+
+      <div class="container">
+
+        <div class="row gy-5">
+
+          <div class="col-lg-12 col-md-12 text-center">
+             
+            <article class="align-items-center">
+              <div class="post-img">
+                <img src="{{ asset('img/blog/blog-1.jpg') }}" alt="" class="img-fluid">
+              </div>
+
+              <div class="meta-top">
+                <ul class="justify-content-center">
+                {% for section in article.sections %}
+                  <li class="d-flex align-items-center"><a href="{{ path("section", {'slug': section.sectionSlug }) }}">{{ section.SectionTitle }}</a></li>
+                {% endfor %}
+                  <li class="d-flex align-items-center"><i class="bi bi-dot"></i>{{ article.ArticleDatePosted|date("d/m/Y \à H:i") }}<a href="blog-details.html"></a></li>
+                </ul>
+              </div>
+
+              <h2 class="title">
+                <a href="{{ path("article", {'slug': article.TitleSlug }) }}">{{ article.title }}</a>
+              </h2>
+
+            </article>
+            
+          
+          </div><!-- End post list item -->
+
+        </div><!-- End blog posts list -->
+
+      </div>
+
+    </section><!-- /Blog Posts 2 Section -->
+    {% endfor %}
+
+    <!-- Blog Pagination Section -->
+    <section id="blog-pagination" class="blog-pagination section">
+
+      <div class="container">
+        <div class="d-flex justify-content-center">
+          <ul>
+            <li><a href="#"><i class="bi bi-chevron-left"></i></a></li>
+            <li><a href="#">1</a></li>
+            <li><a href="#" class="active">2</a></li>
+            <li><a href="#">3</a></li>
+            <li><a href="#">4</a></li>
+            <li>...</li>
+            <li><a href="#">10</a></li>
+            <li><a href="#"><i class="bi bi-chevron-right"></i></a></li>
+          </ul>
+        </div>
+      </div>
+
+    </section><!-- /Blog Pagination Section -->
+
+  </main>
+  {% endblock %}
+  {% block footer %}
+  {% include 'main/footer.html.twig'%}
+  {% endblock %}
+  ``` 
+

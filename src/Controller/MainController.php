@@ -4,11 +4,14 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Repository\SectionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 # Appel de l'Entity Article
 use App\Entity\Article;
+use App\Entity\Section;
+
 
 class MainController extends AbstractController
 {
@@ -16,8 +19,8 @@ class MainController extends AbstractController
     # appel du gestionnaire de Section
     public function index(SectionRepository $sections, EntityManagerInterface $em): Response
     {
-        $articles = $em->getRepository(Article::class)->findBy(['published'=>true], ['article_date_posted'=>'DESC']);
-        
+        $articles = $em->getRepository(Article::class)->findBy(['published'=>true], ['article_date_posted'=>'DESC'],10);
+
         return $this->render(
             'main/index.html.twig', [
                 'title' => 'Homepage',
@@ -52,6 +55,21 @@ class MainController extends AbstractController
             'homepage_text'=> $section->getSectionDetail(),
             'section' => $section,
             'sections' => $sections->findAll(),
+        ]);
+    }
+
+    #[Route('/article/{slug}', name: 'article', methods: ['GET', 'POST'])]
+    public function article($slug, EntityManagerInterface $em, Request $request): Response
+    {
+
+        $sections = $em->getRepository(Section::class)->findAll();
+        $articles = $em->getRepository(Article::class)->findAll();
+        $article = $em->getRepository(Article::class)->findOneBy(['title_slug' => $slug]);
+
+        return $this->render('main/article.html.twig', [
+            'sections' => $sections,
+            'article' => $article,
+            'articles' => $articles,
         ]);
     }
 }
