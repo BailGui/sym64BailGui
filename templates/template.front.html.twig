@@ -41,9 +41,14 @@
                 </ul>
               </div>
 
-              <h2 class="title">
+              <h2 class="title m-3">
                 <a href="{{ path("article", {'slug': article.TitleSlug }) }}">{{ article.title }}</a>
               </h2>
+
+               <p class="text-center m-3">{{ article.text|u.truncate(350, '...', false)|striptags }}<a class="text-decoration-none" href="{{ path("article", { 'slug' :  article.TitleSlug }) }}"> </br>
+                  Lire la suite
+                <i class="bi bi-arrow-right"></i><p></p>
+              </a></p>
 
             </article>
             
