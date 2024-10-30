@@ -28,17 +28,15 @@
               <article class="article">
 
                 <div class="post-img">
-                  <img src="assets/img/blog/blog-1.jpg" alt="" class="img-fluid">
+                  <img src="{{ asset('img/blog/blog-1.jpg') }}" alt="" class="img-fluid">
                 </div>
 
                 <h2 class="title">{{ article.title }}</h2>
-                
-                <img src="{{ asset('img/blog/blog-1.jpg') }}" alt="" class="img-fluid">
 
                 <div class="meta-top">
                   <ul>
                     <li class="d-flex align-items-center"><i class="bi bi-person"></i> <a href="blog-details.html"> {{ article.User.username }}</a></li>
-                    <li class="d-flex align-items-center"><i class="bi bi-clock"></i> <a href="blog-details.html"><time datetime="2020-01-01">Jan 1, 2022</time></a></li>
+                    <li class="d-flex align-items-center"><i class="bi bi-clock"></i> <a href="blog-details.html"><time>{{ article.ArticleDatePosted|date("d/m/Y \à H:i") }}</time></a></li>
                     <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> <a href="blog-details.html">12 Comments</a></li>
                   </ul>
                 </div><!-- End meta top -->
@@ -78,7 +76,7 @@
 
               <div id="comment-1" class="comment">
                 <div class="d-flex">
-                  <div class="comment-img"><img src="assets/img/blog/comments-1.jpg" alt=""></div>
+                  <div class="comment-img"><img src="{{ asset('img/blog/comments-1.jpg') }}" alt=""></div>
                   <div>
                     <h5><a href="">Georgia Reader</a> <a href="#" class="reply"><i class="bi bi-reply-fill"></i> Reply</a></h5>
                     <time datetime="2020-01-01">01 Jan,2022</time>
@@ -92,7 +90,7 @@
 
               <div id="comment-2" class="comment">
                 <div class="d-flex">
-                  <div class="comment-img"><img src="assets/img/blog/comments-2.jpg" alt=""></div>
+                  <div class="comment-img"><img src="{{ asset('img/blog/comments-2.jpg') }}" alt=""></div>
                   <div>
                     <h5><a href="">Aron Alvarado</a> <a href="#" class="reply"><i class="bi bi-reply-fill"></i> Reply</a></h5>
                     <time datetime="2020-01-01">01 Jan,2022</time>
@@ -104,7 +102,7 @@
 
                 <div id="comment-reply-1" class="comment comment-reply">
                   <div class="d-flex">
-                    <div class="comment-img"><img src="assets/img/blog/comments-3.jpg" alt=""></div>
+                    <div class="comment-img"><img src="{{ asset('img/blog/comments-3.jpg') }}" alt=""></div>
                     <div>
                       <h5><a href="">Lynda Small</a> <a href="#" class="reply"><i class="bi bi-reply-fill"></i> Reply</a></h5>
                       <time datetime="2020-01-01">01 Jan,2022</time>
@@ -120,7 +118,7 @@
 
                   <div id="comment-reply-2" class="comment comment-reply">
                     <div class="d-flex">
-                      <div class="comment-img"><img src="assets/img/blog/comments-4.jpg" alt=""></div>
+                      <div class="comment-img"><img src="{{ asset('img/blog/comments-4.jpg') }}" alt=""></div>
                       <div>
                         <h5><a href="">Sianna Ramsay</a> <a href="#" class="reply"><i class="bi bi-reply-fill"></i> Reply</a></h5>
                         <time datetime="2020-01-01">01 Jan,2022</time>
@@ -138,7 +136,7 @@
 
               <div id="comment-3" class="comment">
                 <div class="d-flex">
-                  <div class="comment-img"><img src="assets/img/blog/comments-5.jpg" alt=""></div>
+                  <div class="comment-img"><img src="{{ asset('img/blog/comments-5.jpg') }}" alt=""></div>
                   <div>
                     <h5><a href="">Nolan Davidson</a> <a href="#" class="reply"><i class="bi bi-reply-fill"></i> Reply</a></h5>
                     <time datetime="2020-01-01">01 Jan,2022</time>
@@ -153,7 +151,7 @@
 
               <div id="comment-4" class="comment">
                 <div class="d-flex">
-                  <div class="comment-img"><img src="assets/img/blog/comments-6.jpg" alt=""></div>
+                  <div class="comment-img"><img src="{{ asset('img/blog/comments-6.jpg') }}" alt=""></div>
                   <div>
                     <h5><a href="">Kay Duggan</a> <a href="#" class="reply"><i class="bi bi-reply-fill"></i> Reply</a></h5>
                     <time datetime="2020-01-01">01 Jan,2022</time>
@@ -215,7 +213,7 @@
             <div class="blog-author-widget widget-item">
 
               <div class="d-flex flex-column align-items-center">
-                <img src="assets/img/blog/blog-author.jpg" class="rounded-circle flex-shrink-0" alt="">
+                <img src="{{ asset('img/blog/blog-author.jpg') }}" class="rounded-circle flex-shrink-0" alt="">
                 <h4> {{ article.User.username }}</h4>
                 <div class="social-links">
                   <a href="https://x.com/#"><i class="bi bi-twitter-x"></i></a>
@@ -246,35 +244,15 @@
             <div class="recent-posts-widget widget-item">
 
               <h3 class="widget-title">Recent Posts</h3>
-
+{% for article in articlesdetails %}
               <div class="post-item">
-                <h4><a href="blog-details.html">Nihil blanditiis at in nihil autem</a></h4>
-                <time datetime="2020-01-01">Jan 1, 2020</time>
+                <h4><a href="{{ path("article", {'slug': article.TitleSlug }) }}">{{ article.title }}</a></h4>
+                <time>{{ article.ArticleDatePosted|date("d/m/Y \à H:i") }}</time>
               </div><!-- End recent post item-->
-
-              <div class="post-item">
-                <h4><a href="blog-details.html">Quidem autem et impedit</a></h4>
-                <time datetime="2020-01-01">Jan 1, 2020</time>
-              </div><!-- End recent post item-->
-
-              <div class="post-item">
-                <h4><a href="blog-details.html">Id quia et et ut maxime similique occaecati ut</a></h4>
-                <time datetime="2020-01-01">Jan 1, 2020</time>
-              </div><!-- End recent post item-->
-
-              <div class="post-item">
-                <h4><a href="blog-details.html">Laborum corporis quo dara net para</a></h4>
-                <time datetime="2020-01-01">Jan 1, 2020</time>
-              </div><!-- End recent post item-->
-
-              <div class="post-item">
-                <h4><a href="blog-details.html">Et dolores corrupti quae illo quod dolor</a></h4>
-                <time datetime="2020-01-01">Jan 1, 2020</time>
-              </div><!-- End recent post item-->
-
+{% endfor %}
             </div><!--/Recent Posts Widget -->
 
-            <!-- Tags Widget -->
+            <!-- Tags Widget
             <div class="tags-widget widget-item">
 
               <h3 class="widget-title">Tags</h3>
@@ -292,7 +270,7 @@
                 <li><a href="#">Marketing</a></li>
               </ul>
 
-            </div><!--/Tags Widget -->
+            </div>/Tags Widget -->
 
           </div>
 

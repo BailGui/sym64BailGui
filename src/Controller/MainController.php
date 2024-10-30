@@ -64,12 +64,14 @@ class MainController extends AbstractController
 
         $sections = $em->getRepository(Section::class)->findAll();
         $articles = $em->getRepository(Article::class)->findAll();
+        $articlesdetails = $em->getRepository(Article::class)->findBy(['published'=>true], ['article_date_posted'=>'DESC'],5);
         $article = $em->getRepository(Article::class)->findOneBy(['title_slug' => $slug]);
 
         return $this->render('main/article.html.twig', [
             'sections' => $sections,
             'article' => $article,
             'articles' => $articles,
+            'articlesdetails' => $articlesdetails,
         ]);
     }
 }
