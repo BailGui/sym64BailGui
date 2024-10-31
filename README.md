@@ -744,6 +744,196 @@ premièrement on va créer une branche docker par sécurité
 git checkout -b DockerVersion
 ``` 
 
+## Création du Dockerfile
+
+création d'un dossier docker comprenant un dossier php avec un fichier Dockerfile
+
+```
+# Utiliser l'image de base PHP 8.1 avec fpm (FastCGI Process Manager) pour Alpine Linux 3.16
+FROM php:8.1-fpm-alpine3.16
+# installer les outils de base sans cache pour réduire l'image finale, avec des versions spécifiques :
+RUN apk --no-cache add \
+    bash \
+    git \
+    curl \
+    libpng-dev \
+    libjpeg-turbo-dev \
+    freetype-dev \
+    libzip-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install gd zip
+
+
+# Définicer le répertoire de travail par défaut sur /usr/src/app.
+WORKDIR /usr/src/app
+
+# Copier les fichiers de configuration de Composer pour gérer les dépendances PHP.
+COPY composer.json composer.lock ./
+
+# Ajoute les répertoires bin et vendor/bin au PATH, facilitant l'accès aux commandes installées par Composer.
+RUN PATH=$PATH:/usr/src/app/vendor/bin:bin
+
+# Copier Composer depuis une image précédente pour éviter une réinstallation.
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Copier tous les fichiers de l'application dans le répertoire de
+COPY . .
+
+# Installer les dépendances PHP spécifiées dans composer.json.
+EXPOSE 9000
+CMD ["php-fpm"]
+```
+
+création d'un dossier nginx dans le dossier docker comprenant le fichier default.conf
+
+```
+server {
+   # Le nom de domaine utilisé pour le serveur. Le serveur répondra à domain.tld et www.domain.tld
+   server_name domain.tld www.domain.tld;
+   
+   # Définit le dossier racine où Nginx va chercher les fichiers. 
+   # Symfony utilise généralement un dossier 'public' comme dossier web accessible.
+   root ./:/var/www/html/public;  # Symfony utilise habituellement un dossier 'public'
+
+   # Configuration de la localisation de la racine du site
+   location / {
+       # Nginx essaie d'abord de servir le fichier correspondant à l'URI demandée. 
+       # Si le fichier n'existe pas, il redirige vers index.php (Symfony gère toutes les requêtes via index.php)
+       try_files $uri /index.php$is_args$args;
+   }
+
+   # Gestion des requêtes vers index.php
+   location ~ ^/index\.php(/|$) {
+       # Spécifie le service PHP utilisé par Nginx pour traiter les requêtes PHP, 
+       # ici défini comme le service PHP sur le port 9000 (lié à docker-compose.yml).
+       fastcgi_pass php:9000;  # Correspond au service PHP dans docker-compose.yml
+       
+       # Sépare le chemin de la requête pour les fichiers PHP et les paramètres supplémentaires après le fichier PHP
+       fastcgi_split_path_info ^(.+\.php)(/.*)$;
+       
+       # Inclut les paramètres FastCGI par défaut (nécessaires pour exécuter des scripts PHP)
+       include fastcgi_params;
+
+       # Spécifie le fichier script à exécuter. Ici, Nginx combine la racine du document 
+       # et le nom du script pour déterminer le chemin complet.
+       fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+
+       # Définit la racine du document (le répertoire public de Symfony)
+       fastcgi_param DOCUMENT_ROOT $document_root;
+
+       # Directive interne : cela signifie que cet emplacement ne peut pas être appelé directement par un client.
+       internal;
+   }
+
+   # Gestion de tous les autres fichiers PHP
+   location ~ \.php$ {
+       # Spécifie à nouveau le service PHP, utilisé pour traiter toutes les requêtes .php
+       fastcgi_pass php:9000;
+
+       # Indique le fichier index à appeler si une requête PHP n'a pas de fichier spécifique
+       fastcgi_index index.php;
+
+       # Détermine le chemin complet du fichier PHP à exécuter
+       fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+
+       # Inclut les paramètres FastCGI nécessaires pour exécuter les scripts PHP
+       include fastcgi_params;
+   }
+
+   # Fichier pour enregistrer les logs d'erreurs Nginx (liés à ce serveur)
+   error_log /var/log/nginx/project_error.log;
+
+   # Fichier pour enregistrer les logs des accès au serveur Nginx
+   access_log /var/log/nginx/project_access.log;
+}
+``` 
+
+création d'un fichier docker-compose.yaml 
+
+```yaml
+
+services:
+  php:
+    build:
+      context: .
+      dockerfile: ./docker/php/Dockerfile
+    volumes:
+      - ./:/var/www/html/
+
+    networks:
+      - symfony-network
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./:/var/www/html/
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "8080:80"
+    networks:
+      - symfony-network
+    depends_on:
+      - php
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: sym64bailgui
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3308:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - symfony-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: mysql
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "8081:80"
+    networks:
+      - symfony-network
+
+volumes:
+  mysql-data:
+
+networks:
+  symfony-network:
+
+```
+
+## Lancement de Docker
+
+    docker-compose down
+    docker-compose build
+    docker-compose up -d
+
+## Pour utiliser PHP de l'intérieur du container
+
+    docker-compose exec php bash
+
+Par exemple pour installer les dépendances :
+
+    composer install
+
+Pour quitter le container :
+
+    exit
+
+
+# FIN DU TI 
+
+
+
+
+
+
 
 
   
