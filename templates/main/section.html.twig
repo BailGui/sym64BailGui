@@ -6,17 +6,17 @@
 
 {% block body %}
 <div class="container section-title">
-  <div class="row justify-content-center">
-     <div class="col-12 align-items-center justify-content-center mt-5">
+  <div class="row">
+     <div class="col-12 mt-5">
 
 <h1>{{ title }}</h1>
-    <p>{{ homepage_text }}</p>
+    <p class="mb-5">{{ homepage_text }}</p>
      {% for article in section.articles %}
         <h3>{{ article.Title }}</h3>
          <p>Ecrit par {{ article.user.username }} le
              {{ article.articleDateCreate|date("d/m/Y \à H:i") }}</p>
          <p>{{ article.Text }}</p>
-    <p>
+    <p class="mb-5">
          {% for section in article.sections %}
              <a href="{{ path('section',{id:section.id}) }}">{{ section.SectionTitle }}</a>
          {% else %}

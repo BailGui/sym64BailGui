@@ -734,5 +734,17 @@ Appel et modification de template.front.html.twig
   {% endblock %}
   ``` 
 
+#DOCKER VERSION
+
+on va dockeriser notre projet symfony 
+
+premièrement on va créer une branche docker par sécurité
+
+```
+git checkout -b DockerVersion
+``` 
+
+
+
   
 
