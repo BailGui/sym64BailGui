@@ -734,7 +734,7 @@ Appel et modification de template.front.html.twig
   {% endblock %}
   ``` 
 
-#DOCKER VERSION
+# DOCKER VERSION
 
 on va dockeriser notre projet symfony 
 
